@@ -20,7 +20,17 @@ export const getFileName = file =>
     .split('/')
     .pop()
 
-const getMimeType = file => file.type || getType(getFileName(file).split('.')[1])
+const getMimeType = file => {
+  if (file.type) {
+    return file.type
+  }
+
+  const extension = getFileName(file)
+    .split('.')
+    .slice()
+    .pop()
+  return getType(extension)
+}
 
 export const getFileSize = file => (file.size ? formatBytes(file.size, 0) : null)
 
@@ -31,13 +41,13 @@ export const getFileIcon = (file, forceFileType) => {
     return AttachmentIcon
   }
 
-  if (forceFileType === 'image' || (mimeType && mimeType.startsWith('image/'))) {
+  if (forceFileType === 'image' || mimeType?.startsWith('image/')) {
     return CameraIcon
   }
-  if (forceFileType === 'audio' || (mimeType && mimeType.startsWith('audio/'))) {
+  if (forceFileType === 'audio' || mimeType?.startsWith('audio/')) {
     return MusicIcon
   }
-  if (forceFileType === 'video' || (mimeType && mimeType.startsWith('video/'))) {
+  if (forceFileType === 'video' || mimeType?.startsWith('video/')) {
     return VideoIcon
   }
 
