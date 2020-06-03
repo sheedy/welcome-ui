@@ -7,7 +7,9 @@ defaults_deploy: &defaults_deploy
   working_directory: ~/welcome-ui
   machine: true
 
-version: 2
+version: 2.1
+orbs:
+  aws-s3: circleci/aws-s3@1.0.13
 jobs:
   checkout:
     <<: *defaults
@@ -49,6 +51,20 @@ jobs:
           key: v2-welcome-ui-{{ .Environment.CIRCLE_SHA1 }}
       - run: yarn test
 
+  build_and_release_icon_font:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/welcome-ui
+      - restore_cache:
+          key: v2-welcome-ui-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn icons:collect
+      - aws-s3/sync:
+          from: packages/IconFont/fonts
+          to: s3://welcome-ui/projects/$CIRCLE_PROJECT_REPONAME-iconfont/$CIRCLE_BRANCH/
+          arguments: |
+            --metadata GitCommit=$CIRCLE_SHA1 --delete
+
   docs_build:
     <<: *defaults
     steps:
@@ -86,6 +102,10 @@ workflows:
       - test:
           requires:
             - yarn_install
+      - build_and_release_icon_font:
+          requires:
+            - lint
+            - test
       - docs_build:
           requires:
             - lint
@@ -93,4 +113,3 @@ workflows:
       - docs_deploy:
           requires:
             - docs_build
-        
