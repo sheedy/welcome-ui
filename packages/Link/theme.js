@@ -1,11 +1,10 @@
-import { css } from 'styled-components'
-
 export const getLinks = theme => {
   const { colors, fontWeights, transitions, underline } = theme
+
   return {
     default: {
       color: colors.dark[500],
-      'font-weight': fontWeights.medium,
+      fontWeight: fontWeights.medium,
       transition: transitions.medium
     },
     primary: {
@@ -13,16 +12,16 @@ export const getLinks = theme => {
       hover: underline.hover
     },
     'primary-underline-span': {
-      default: css`
-        > span {
-          ${underline.default};
+      default: {
+        '> span': {
+          ...underline.default
         }
-      `,
-      hover: css`
-        > span {
-          ${underline.hover};
+      },
+      hover: {
+        '> span': {
+          ...underline.hover
         }
-      `
+      }
     },
     secondary: {
       default: '',
