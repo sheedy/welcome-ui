@@ -31,7 +31,7 @@
   },
   "homepage": "https://welcome-ui.com",
   "dependencies": {
-    "@mdx-js/loader": "1.6.1",
+    "@mdx-js/loader": "1.6.16",
     "@mdx-js/react": "1.6.1",
     "@next/mdx": "9.4.0",
     "@xstyled/styled-components": "^1.17.0",
